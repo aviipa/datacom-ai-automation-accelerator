@@ -1,0 +1,14 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+.DS_Store
+~$*
+task1/official_solution/
+task2/official_solution/
+task3/official_solution/
+**/SOLUTION_COMPARISON.md
+**/TASK*_INSTRUCTIONS.md
+**/TASK_*_SUBMISSION.md
+task3/our_solution/gslides_*.png
+task3/our_solution/gslides_batch.json

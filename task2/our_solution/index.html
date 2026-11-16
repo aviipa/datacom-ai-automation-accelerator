@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datacom Employee Portal — Peer Kudos</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --border: #dce4f0;
+      --text: #162238;
+      --muted: #5a6b84;
+      --primary: #0f62fe;
+      --primary-hover: #0043ce;
+      --danger: #da1e28;
+      --warning: #b28600;
+      --success: #198038;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: #edf5ff;
+      color: #0043ce;
+      border: 1px solid #d0e2ff;
+    }
+
+    .mode-badge.standalone {
+      background: #fff8e1;
+      color: #7a5800;
+      border-color: #f3dc92;
+    }
+
+    .user-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+    }
+
+    select,
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+      min-height: 44px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field-group {
+      margin-bottom: 1rem;
+    }
+
+    .char-counter {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .char-counter.over {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      font: inherit;
+      font-weight: 600;
+      min-height: 44px;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #edf2f9;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e1e8f3;
+    }
+
+    .btn-warning {
+      background: #fff5d6;
+      color: #6b4f00;
+      border: 1px solid #f0d78c;
+      min-height: 36px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-danger {
+      background: #fff1f1;
+      color: var(--danger);
+      border: 1px solid #f5b7ba;
+      min-height: 36px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .status {
+      margin-top: 0.75rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.error {
+      background: #fff1f1;
+      color: var(--danger);
+      border: 1px solid #f5b7ba;
+    }
+
+    .status.success {
+      background: #defbe6;
+      color: var(--success);
+      border: 1px solid #a7f0ba;
+    }
+
+    .feed-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .feed-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+
+    .kudos-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .kudos-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #fcfdff;
+    }
+
+    .kudos-item.hidden-item {
+      border-style: dashed;
+      border-color: var(--warning);
+      background: #fffdf5;
+    }
+
+    .kudos-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .kudos-message {
+      margin: 0.25rem 0 0.5rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #fff5d6;
+      color: #6b4f00;
+    }
+
+    .moderation-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.65rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    dialog {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      max-width: 440px;
+      width: 90%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-group">
+      <h1>Datacom Employee Portal — Peer Kudos</h1>
+      <span id="modeBadge" class="mode-badge">Connecting...</span>
+    </div>
+    <div class="user-switcher">
+      <label for="activeUserSelect" style="margin:0;">Active User:</label>
+      <select id="activeUserSelect" style="width:auto;min-width:220px;"></select>
+      <button type="button" id="resetDemoBtn" class="btn-secondary" style="display:none;min-height:38px;padding:0.4rem 0.75rem;font-size:0.85rem;">
+        Reset Demo Data
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle">Give Kudos</h2>
+      <form id="kudosForm" novalidate>
+        <div class="field-group">
+          <label for="recipientSelect">Select Colleague</label>
+          <select id="recipientSelect" required></select>
+        </div>
+        <div class="field-group">
+          <label for="messageInput">Message of Appreciation</label>
+          <textarea
+            id="messageInput"
+            maxlength="550"
+            placeholder="Share specific appreciation for a colleague..."
+            required
+          ></textarea>
+          <div id="charCounter" class="char-counter">0 / 500</div>
+        </div>
+        <button type="submit" class="btn-primary">Send Kudos</button>
+        <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="feedTitle">
+      <div class="feed-header">
+        <h2 id="feedTitle" style="margin:0;">Public Kudos Feed</h2>
+        <div class="feed-controls">
+          <label id="adminToggleWrap" style="display:none;align-items:center;gap:0.4rem;margin:0;font-weight:500;">
+            <input type="checkbox" id="includeHiddenCheckbox" />
+            Show hidden kudos
+          </label>
+          <button type="button" id="refreshBtn" class="btn-secondary">Refresh</button>
+        </div>
+      </div>
+
+      <div id="kudosFeedList" class="kudos-list"></div>
+
+      <div class="pagination">
+        <button type="button" id="prevPageBtn" class="btn-secondary">Previous</button>
+        <span id="pageInfo" style="font-size:0.88rem;color:var(--muted);"></span>
+        <button type="button" id="nextPageBtn" class="btn-secondary">Next</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="moderationDialog">
+    <form method="dialog" id="moderationForm">
+      <h2 id="moderationDialogTitle">Moderate Kudos</h2>
+      <div class="field-group">
+        <label for="moderationReasonInput">Reason for moderation</label>
+        <input id="moderationReasonInput" type="text" maxlength="500" required />
+      </div>
+      <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+        <button type="button" id="cancelModBtn" class="btn-secondary">Cancel</button>
+        <button type="submit" class="btn-primary" style="width:auto;">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const PAGE_SIZE = 10;
+    const STORAGE_KEY = "datacom_kudos_standalone_v1";
+    const BLOCKED_TERMS = ["spamlink", "phishing-scam", "abuseword"];
+    const DUPLICATE_WINDOW_MS = 300 * 1000;
+    const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+    const RATE_LIMIT_MAX_KUDOS = 10;
+
+    let activeUserId = 1;
+    let activeUserRole = "employee";
+    let allUsers = [];
+    let currentOffset = 0;
+    let pendingModeration = null;
+    let useLiveApi = false;
+    let memoryFallbackState = null;
+
+    const modeBadge = document.getElementById("modeBadge");
+    const resetDemoBtn = document.getElementById("resetDemoBtn");
+    const activeUserSelect = document.getElementById("activeUserSelect");
+    const recipientSelect = document.getElementById("recipientSelect");
+    const messageInput = document.getElementById("messageInput");
+    const charCounter = document.getElementById("charCounter");
+    const kudosForm = document.getElementById("kudosForm");
+    const formStatus = document.getElementById("formStatus");
+    const kudosFeedList = document.getElementById("kudosFeedList");
+    const adminToggleWrap = document.getElementById("adminToggleWrap");
+    const includeHiddenCheckbox = document.getElementById("includeHiddenCheckbox");
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const pageInfo = document.getElementById("pageInfo");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const moderationDialog = document.getElementById("moderationDialog");
+    const moderationReasonInput = document.getElementById("moderationReasonInput");
+    const moderationDialogTitle = document.getElementById("moderationDialogTitle");
+    const moderationForm = document.getElementById("moderationForm");
+    const cancelModBtn = document.getElementById("cancelModBtn");
+
+    function showStatus(text, isError) {
+      formStatus.textContent = text;
+      formStatus.className = "status show " + (isError ? "error" : "success");
+    }
+
+    function createDefaultStandaloneState() {
+      const now = Date.now();
+      return {
+        nextId: 4,
+        users: [
+          { id: 1, email: "alice.silva@datacom.example", full_name: "Alice Silva", department: "Engineering", role: "employee", is_active: true },
+          { id: 2, email: "bob.santos@datacom.example", full_name: "Bob Santos", department: "Automation", role: "employee", is_active: true },
+          { id: 3, email: "carol.costa@datacom.example", full_name: "Carol Costa", department: "Product", role: "employee", is_active: true },
+          { id: 4, email: "daniel.rocha@datacom.example", full_name: "Daniel Rocha", department: "People & Culture", role: "admin", is_active: true }
+        ],
+        kudos: [
+          {
+            id: 3,
+            sender_id: 2,
+            sender_name: "Bob Santos",
+            recipient_id: 1,
+            recipient_name: "Alice Silva",
+            message: "Huge thanks for reviewing the ETL refactor and adding unit tests before release!",
+            is_visible: true,
+            moderated_by: null,
+            moderator_name: null,
+            moderated_at: null,
+            reason_for_moderation: null,
+            created_at: new Date(now - 10 * 60 * 1000).toISOString(),
+            updated_at: new Date(now - 10 * 60 * 1000).toISOString()
+          },
+          {
+            id: 2,
+            sender_id: 3,
+            sender_name: "Carol Costa",
+            recipient_id: 2,
+            recipient_name: "Bob Santos",
+            message: "Awesome collaboration mapping the client automation workflow today.",
+            is_visible: true,
+            moderated_by: null,
+            moderator_name: null,
+            moderated_at: null,
+            reason_for_moderation: null,
+            created_at: new Date(now - 45 * 60 * 1000).toISOString(),
+            updated_at: new Date(now - 45 * 60 * 1000).toISOString()
+          },
+          {
+            id: 1,
+            sender_id: 1,
+            sender_name: "Alice Silva",
+            recipient_id: 3,
+            recipient_name: "Carol Costa",
+            message: "Thank you for clarifying the acceptance criteria ahead of sprint planning!",
+            is_visible: true,
+            moderated_by: null,
+            moderator_name: null,
+            moderated_at: null,
+            reason_for_moderation: null,
+            created_at: new Date(now - 90 * 60 * 1000).toISOString(),
+            updated_at: new Date(now - 90 * 60 * 1000).toISOString()
+          }
+        ]
+      };
+    }
+
+    function loadStandaloneState() {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.users) && Array.isArray(parsed.kudos)) {
+            return parsed;
+          }
+        }
+      } catch (_) {
+        if (memoryFallbackState) return memoryFallbackState;
+      }
+      const seeded = createDefaultStandaloneState();
+      saveStandaloneState(seeded);
+      return seeded;
+    }
+
+    function saveStandaloneState(state) {
+      memoryFallbackState = state;
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (_) {
+        // Fallback to in-memory state if localStorage is blocked on file://
+      }
+    }
+
+    function standaloneApi(path, options = {}) {
+      const method = (options.method || "GET").toUpperCase();
+      const state = loadStandaloneState();
+      const actor = state.users.find((u) => u.id === activeUserId && u.is_active);
+      if (!actor) {
+        throw new Error("Authenticated user not found or inactive");
+      }
+
+      const [pathname, queryStr = ""] = path.split("?");
+      const params = new URLSearchParams(queryStr);
+
+      if (method === "GET" && pathname === "/api/users") {
+        const includeSelf = params.get("include_self") === "true";
+        const users = state.users
+          .filter((u) => u.is_active && (includeSelf || u.id !== actor.id))
+          .slice()
+          .sort((a, b) => a.full_name.localeCompare(b.full_name));
+        return { users };
+      }
+
+      if (method === "GET" && pathname === "/api/kudos") {
+        const limit = Number(params.get("limit") || PAGE_SIZE);
+        const offset = Number(params.get("offset") || 0);
+        const includeHidden = params.get("include_hidden") === "true";
+        if (includeHidden && actor.role !== "admin") {
+          throw new Error("Only administrators can view hidden kudos");
+        }
+        const filtered = state.kudos
+          .filter((k) => includeHidden || k.is_visible)
+          .slice()
+          .sort((a, b) => {
+            if (a.created_at !== b.created_at) {
+              return b.created_at.localeCompare(a.created_at);
+            }
+            return b.id - a.id;
+          });
+        const items = filtered.slice(offset, offset + limit);
+        return {
+          items,
+          total: filtered.length,
+          limit,
+          offset,
+          has_more: offset + items.length < filtered.length
+        };
+      }
+
+      if (method === "POST" && pathname === "/api/kudos") {
+        const body = JSON.parse(options.body || "{}");
+        const recipientId = Number(body.recipient_id);
+        if (!Number.isInteger(recipientId)) {
+          throw new Error("A valid recipient_id is required");
+        }
+        if (recipientId === actor.id) {
+          throw new Error("Cannot send kudos to yourself");
+        }
+        const recipient = state.users.find((u) => u.id === recipientId && u.is_active);
+        if (!recipient) {
+          throw new Error("Selected colleague was not found or is inactive");
+        }
+        const trimmed = typeof body.message === "string" ? body.message.trim() : "";
+        if (!trimmed) {
+          throw new Error("Message cannot be empty");
+        }
+        if (trimmed.length > 500) {
+          throw new Error("Message cannot exceed 500 characters");
+        }
+        const lowerMsg = trimmed.toLowerCase();
+        for (const term of BLOCKED_TERMS) {
+          const re = new RegExp("\\b" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
+          if (re.test(lowerMsg)) {
+            throw new Error("Message violates workplace content policy");
+          }
+        }
+
+        const nowMs = Date.now();
+        const recentBySender = state.kudos.filter(
+          (k) => k.sender_id === actor.id && nowMs - new Date(k.created_at).getTime() <= RATE_LIMIT_WINDOW_MS
+        );
+        if (recentBySender.length >= RATE_LIMIT_MAX_KUDOS) {
+          throw new Error("Rate limit exceeded; please try again shortly");
+        }
+
+        const duplicate = state.kudos.find(
+          (k) =>
+            k.sender_id === actor.id &&
+            k.recipient_id === recipientId &&
+            nowMs - new Date(k.created_at).getTime() <= DUPLICATE_WINDOW_MS &&
+            k.message.trim().toLowerCase() === lowerMsg
+        );
+        if (duplicate) {
+          throw new Error("Duplicate kudos detected for this colleague within cooldown window");
+        }
+
+        const nowIso = new Date(nowMs).toISOString();
+        const newItem = {
+          id: state.nextId++,
+          sender_id: actor.id,
+          sender_name: actor.full_name,
+          recipient_id: recipient.id,
+          recipient_name: recipient.full_name,
+          message: trimmed,
+          is_visible: true,
+          moderated_by: null,
+          moderator_name: null,
+          moderated_at: null,
+          reason_for_moderation: null,
+          created_at: nowIso,
+          updated_at: nowIso
+        };
+        state.kudos.unshift(newItem);
+        saveStandaloneState(state);
+        return { kudos: newItem };
+      }
+
+      const modMatch = pathname.match(/^\/api\/kudos\/(\d+)\/moderate$/);
+      if (method === "PATCH" && modMatch) {
+        if (actor.role !== "admin") {
+          throw new Error("Administrator privileges required to moderate kudos");
+        }
+        const kudosId = Number(modMatch[1]);
+        const item = state.kudos.find((k) => k.id === kudosId);
+        if (!item) {
+          throw new Error(`Kudos ${kudosId} not found`);
+        }
+        const body = JSON.parse(options.body || "{}");
+        const action = String(body.action || "").trim().toLowerCase();
+        const reason = typeof body.reason === "string" ? body.reason.trim() : "";
+        if (action !== "hide" && action !== "restore") {
+          throw new Error("Moderation action must be 'hide' or 'restore'");
+        }
+        if (!reason) {
+          throw new Error("A non-empty reason_for_moderation is required");
+        }
+        if (reason.length > 500) {
+          throw new Error("Moderation reason cannot exceed 500 characters");
+        }
+        const nowIso = new Date().toISOString();
+        item.is_visible = action === "restore";
+        item.moderated_by = actor.id;
+        item.moderator_name = actor.full_name;
+        item.moderated_at = nowIso;
+        item.reason_for_moderation = reason;
+        item.updated_at = nowIso;
+        saveStandaloneState(state);
+        return { kudos: item };
+      }
+
+      const delMatch = pathname.match(/^\/api\/kudos\/(\d+)$/);
+      if (method === "DELETE" && delMatch) {
+        if (actor.role !== "admin") {
+          throw new Error("Administrator privileges required to delete kudos");
+        }
+        const kudosId = Number(delMatch[1]);
+        const idx = state.kudos.findIndex((k) => k.id === kudosId);
+        if (idx === -1) {
+          throw new Error(`Kudos ${kudosId} not found`);
+        }
+        state.kudos.splice(idx, 1);
+        saveStandaloneState(state);
+        return { deleted: true, id: kudosId };
+      }
+
+      throw new Error("Endpoint not found");
+    }
+
+    async function detectBackendMode() {
+      if (!window.location.protocol.startsWith("http")) {
+        useLiveApi = false;
+        modeBadge.textContent = "Standalone Interactive Mode";
+        modeBadge.className = "mode-badge standalone";
+        resetDemoBtn.style.display = "inline-block";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/users?include_self=true", {
+          headers: { "X-User-Id": String(activeUserId) }
+        });
+        const contentType = res.headers.get("content-type") || "";
+        if (res.ok && contentType.includes("application/json")) {
+          const data = await res.json();
+          if (data && Array.isArray(data.users)) {
+            useLiveApi = true;
+            modeBadge.textContent = "Live SQLite API";
+            modeBadge.className = "mode-badge";
+            resetDemoBtn.style.display = "none";
+            return;
+          }
+        }
+      } catch (_) {
+        // Fall back cleanly if HTTP server has no /api backend
+      }
+
+      useLiveApi = false;
+      modeBadge.textContent = "Standalone Interactive Mode";
+      modeBadge.className = "mode-badge standalone";
+      resetDemoBtn.style.display = "inline-block";
+    }
+
+    async function apiFetch(path, options = {}) {
+      if (!useLiveApi) {
+        return standaloneApi(path, options);
+      }
+
+      const headers = Object.assign(
+        { "X-User-Id": String(activeUserId) },
+        options.headers || {}
+      );
+      if (options.body && !headers["Content-Type"]) {
+        headers["Content-Type"] = "application/json";
+      }
+      const res = await fetch(path, Object.assign({}, options, { headers }));
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = (data && data.error && data.error.message) || "Request failed";
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    function updateCharCounter() {
+      const len = messageInput.value.trim().length;
+      charCounter.textContent = `${len} / 500`;
+      charCounter.className = len > 500 ? "char-counter over" : "char-counter";
+    }
+
+    async function loadUsers() {
+      const data = await apiFetch("/api/users?include_self=true");
+      allUsers = data.users || [];
+
+      activeUserSelect.replaceChildren();
+      recipientSelect.replaceChildren();
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "-- Choose a colleague --";
+      recipientSelect.appendChild(placeholder);
+
+      for (const user of allUsers) {
+        const opt = document.createElement("option");
+        opt.value = String(user.id);
+        opt.textContent = `${user.full_name} (${user.role})`;
+        if (user.id === activeUserId) {
+          opt.selected = true;
+          activeUserRole = user.role;
+        }
+        activeUserSelect.appendChild(opt);
+
+        if (user.id !== activeUserId) {
+          const recOpt = document.createElement("option");
+          recOpt.value = String(user.id);
+          recOpt.textContent = `${user.full_name} — ${user.department}`;
+          recipientSelect.appendChild(recOpt);
+        }
+      }
+
+      adminToggleWrap.style.display = activeUserRole === "admin" ? "flex" : "none";
+      if (activeUserRole !== "admin") {
+        includeHiddenCheckbox.checked = false;
+      }
+    }
+
+    function decodeHtmlEntitiesSafely(value) {
+      if (!useLiveApi) return value;
+      const parser = new DOMParser();
+      return parser.parseFromString(value, "text/html").documentElement.textContent;
+    }
+
+    function renderKudosCard(item) {
+      const card = document.createElement("article");
+      card.className = "kudos-item" + (item.is_visible ? "" : " hidden-item");
+
+      const meta = document.createElement("div");
+      meta.className = "kudos-meta";
+
+      const names = document.createElement("strong");
+      names.textContent = `${item.sender_name} -> ${item.recipient_name}`;
+      meta.appendChild(names);
+
+      const rightMeta = document.createElement("span");
+      rightMeta.textContent = new Date(item.created_at).toLocaleString();
+      meta.appendChild(rightMeta);
+      card.appendChild(meta);
+
+      if (!item.is_visible) {
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = `Hidden: ${item.reason_for_moderation || "Moderated"}`;
+        card.appendChild(badge);
+      }
+
+      const body = document.createElement("p");
+      body.className = "kudos-message";
+      body.textContent = decodeHtmlEntitiesSafely(item.message);
+      card.appendChild(body);
+
+      if (activeUserRole === "admin") {
+        const bar = document.createElement("div");
+        bar.className = "moderation-bar";
+
+        const modBtn = document.createElement("button");
+        modBtn.type = "button";
+        modBtn.className = "btn-warning";
+        const action = item.is_visible ? "hide" : "restore";
+        modBtn.textContent = item.is_visible ? "Hide Kudos" : "Restore Kudos";
+        modBtn.addEventListener("click", () => {
+          pendingModeration = { id: item.id, action };
+          moderationDialogTitle.textContent =
+            action === "hide" ? "Hide Kudos Message" : "Restore Kudos Message";
+          moderationReasonInput.value = "";
+          moderationDialog.showModal();
+        });
+        bar.appendChild(modBtn);
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn-danger";
+        delBtn.textContent = "Delete Permanently";
+        delBtn.addEventListener("click", async () => {
+          try {
+            await apiFetch(`/api/kudos/${item.id}`, { method: "DELETE" });
+            await loadFeed();
+          } catch (err) {
+            showStatus(err.message, true);
+          }
+        });
+        bar.appendChild(delBtn);
+
+        card.appendChild(bar);
+      }
+
+      return card;
+    }
+
+    async function loadFeed() {
+      const includeHidden = activeUserRole === "admin" && includeHiddenCheckbox.checked;
+      const data = await apiFetch(
+        `/api/kudos?limit=${PAGE_SIZE}&offset=${currentOffset}&include_hidden=${includeHidden}`
+      );
+      kudosFeedList.replaceChildren();
+
+      if (!data.items.length) {
+        const empty = document.createElement("p");
+        empty.style.color = "var(--muted)";
+        empty.textContent = "No kudos submitted yet. Recognize a colleague!";
+        kudosFeedList.appendChild(empty);
+      } else {
+        for (const item of data.items) {
+          kudosFeedList.appendChild(renderKudosCard(item));
+        }
+      }
+
+      const start = data.total === 0 ? 0 : currentOffset + 1;
+      const end = currentOffset + data.items.length;
+      pageInfo.textContent = `Showing ${start}-${end} of ${data.total}`;
+      prevPageBtn.disabled = currentOffset === 0;
+      nextPageBtn.disabled = !data.has_more;
+    }
+
+    kudosForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const recipientId = recipientSelect.value;
+      const message = messageInput.value;
+      if (!recipientId) {
+        showStatus("Please select a colleague.", true);
+        return;
+      }
+      if (!message.trim() || message.trim().length > 500) {
+        showStatus("Message must be between 1 and 500 characters.", true);
+        return;
+      }
+      try {
+        await apiFetch("/api/kudos", {
+          method: "POST",
+          body: JSON.stringify({ recipient_id: Number(recipientId), message }),
+        });
+        messageInput.value = "";
+        updateCharCounter();
+        currentOffset = 0;
+        showStatus("Kudos submitted successfully!", false);
+        await loadFeed();
+      } catch (err) {
+        showStatus(err.message, true);
+      }
+    });
+
+    activeUserSelect.addEventListener("change", async () => {
+      activeUserId = Number(activeUserSelect.value);
+      currentOffset = 0;
+      await loadUsers();
+      await loadFeed();
+    });
+
+    includeHiddenCheckbox.addEventListener("change", () => {
+      currentOffset = 0;
+      loadFeed();
+    });
+
+    refreshBtn.addEventListener("click", loadFeed);
+    prevPageBtn.addEventListener("click", () => {
+      currentOffset = Math.max(0, currentOffset - PAGE_SIZE);
+      loadFeed();
+    });
+    nextPageBtn.addEventListener("click", () => {
+      currentOffset += PAGE_SIZE;
+      loadFeed();
+    });
+    messageInput.addEventListener("input", updateCharCounter);
+
+    resetDemoBtn.addEventListener("click", async () => {
+      saveStandaloneState(createDefaultStandaloneState());
+      currentOffset = 0;
+      showStatus("Demo data reset to initial seed.", false);
+      await loadUsers();
+      await loadFeed();
+    });
+
+    cancelModBtn.addEventListener("click", () => {
+      pendingModeration = null;
+      moderationDialog.close();
+    });
+
+    moderationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!pendingModeration) return;
+      const reason = moderationReasonInput.value.trim();
+      if (!reason) return;
+      try {
+        await apiFetch(`/api/kudos/${pendingModeration.id}/moderate`, {
+          method: "PATCH",
+          body: JSON.stringify({ action: pendingModeration.action, reason }),
+        });
+        pendingModeration = null;
+        moderationDialog.close();
+        await loadFeed();
+      } catch (err) {
+        showStatus(err.message, true);
+      }
+    });
+
+    (async () => {
+      try {
+        updateCharCounter();
+        await detectBackendMode();
+        await loadUsers();
+        await loadFeed();
+      } catch (err) {
+        showStatus(`Initialization error: ${err.message}`, true);
+      }
+    })();
+  </script>
+</body>
+</html>
